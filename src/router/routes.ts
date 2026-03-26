@@ -1,10 +1,26 @@
+import { storeToRefs } from 'pinia';
+import { useUserStore } from 'src/stores/user';
 import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [
+      {
+        path: '',
+        component: () => import('pages/IndexPage.vue'),
+        meta: { public: true }
+      },
+      {
+        path: 'oauth-success',
+        component: () => import('pages/OAuthSuccess.vue'),
+      },
+      {
+        path: 'patient-register',
+        component: () => import('pages/PatientRegister.vue'),
+      }
+    ],
   },
 
   // Always leave this as last one,
@@ -12,6 +28,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
+    meta: { public: true }
   },
 ];
 

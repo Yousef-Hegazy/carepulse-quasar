@@ -19,7 +19,7 @@ import routes from './routes';
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : process.env.VUE_ROUTER_MODE === 'history'
+    : process.env.VITE_APP_VUE_ROUTER_MODE === 'history'
       ? createWebHistory
       : createWebHashHistory;
 

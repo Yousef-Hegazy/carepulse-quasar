@@ -1,43 +1,45 @@
+<script setup lang="ts">
+import AuthForm from 'src/components/forms/AuthForm.vue';
+import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
+</script>
+
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="q-p-none row no-wrap full-width full-height">
+    <div class="absolute-top-left q-pa-sm">
+      <language-switcher />
+    </div>
+
+    <section class="remove-scrollbar container q-my-auto col-grow">
+      <div class="sub-container max-w-xxs">
+        <q-img
+          src="assets/icons/logo-full.svg"
+          alt="CarePulse Logo"
+          fit="contain"
+          width="10.8rem"
+          height="auto"
+          class="q-mb-xl"
+        />
+
+        <auth-form />
+      </div>
+    </section>
+
+    <q-img src="assets/images/onboarding-img.png" class="col-grow" />
   </q-page>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import type { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+<style lang="scss" scoped>
+.max-w-xxs {
+  max-width: $bp-xxs;
+  width: 100%;
+}
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1',
-  },
-  {
-    id: 2,
-    content: 'ct2',
-  },
-  {
-    id: 3,
-    content: 'ct3',
-  },
-  {
-    id: 4,
-    content: 'ct4',
-  },
-  {
-    id: 5,
-    content: 'ct5',
-  },
-]);
+// .carepulse {
+//   width: 4rem;
+//   height: 2.5rem;
 
-const meta = ref<Meta>({
-  totalCount: 1200,
-});
-</script>
+//   img {
+//     height: 100%;
+//   }
+// }
+</style>

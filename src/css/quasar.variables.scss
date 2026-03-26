@@ -12,14 +12,58 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary: #1976d2;
+$bp-xxs: 496px;
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+$dark-scale: (
+  200: #0D0F10,
+  300: #131619,
+  400: #1A1D21,
+  500: #363A3D,
+  600: #76828D,
+  700: #ABB8C4,
+);
+
+@function dark($shade) {
+  @return map-get($dark-scale, $shade);
+}
+
+$dark: dark(400);
+$dark-page: dark(300);
+
+$primary: #00bd4b;
 $secondary: #26a69a;
 $accent: #9c27b0;
-
-$dark: #1d1d1d;
-$dark-page: #121212;
-
 $positive: #21ba45;
-$negative: #c10015;
+$negative: #ff5252;
 $info: #31ccec;
 $warning: #f2c037;
+
+$dark-page: rgba(19, 22, 25, 1);
+
+// 1. Soften the shadows (Material shadows are too heavy)
+$shadow-up-1: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+$shadow-2: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+
+// 2. Modern Rounding (Material is 4px, let's go 8px or 12px)
+$generic-border-radius: 8px;
+$button-border-radius: 8px;
+
+// 3. Typography (Crucial for that "Not-Google" look)
+$typography-font-family: 'Plus Jakarta Sans', sans-serif;
+
+// 4. Subtle Inputs (Remove the heavy 'filled' look)
+$input-font-size: 14px;
+
+$button-padding: 8px 20px;
+
+$button-dense-padding: 4px 16px;
+
+$h1: (
+  size: 6rem,
+  line-height: initial,
+  weight: 400,
+);

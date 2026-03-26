@@ -48,7 +48,11 @@ export default defineConfigWithVueTs(
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+        extraFileExtensions: ['.vue'],
+      },
       globals: {
         ...globals.browser,
         ...globals.node, // SSR, Electron, config files
@@ -61,12 +65,27 @@ export default defineConfigWithVueTs(
       },
     },
 
+    linterOptions: {
+      reportUnusedDisableDirectives: 'off', // or true/false depending on your preference
+    },
+
     // add your custom rules here
     rules: {
       'prefer-promise-reject-errors': 'off',
 
       // allow debugger during development only
       'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertions': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+      '@typescript-eslint/no-redundant-type-constituents': 'off',
+      '@typescript-eslint/no-base-to-string': 'off',
+      '@typescript-eslint/restrict-template-expressions': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
     },
   },
 

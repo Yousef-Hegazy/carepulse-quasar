@@ -5,5 +5,9 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "tailwindCSS.classAttributes": ["class", "className", ".*Class"],
+  "tailwindCSS.experimental.classRegex": [
+    ["tw-([a-zA-Z0-9-]+)", "tw-([a-zA-Z0-9-]+)"]
+  ]
 }

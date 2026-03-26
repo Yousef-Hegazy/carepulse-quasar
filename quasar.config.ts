@@ -12,7 +12,7 @@ export default defineConfig((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'axios'],
+    boot: ['i18n', 'quasar-lang-pack', 'keycloak', 'vue-query', 'api'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -22,20 +22,31 @@ export default defineConfig((ctx) => {
       // 'ionicons-v4',
       // 'mdi-v7',
       // 'fontawesome-v6',
-      // 'eva-icons',
+      'eva-icons',
       // 'themify',
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
-
-      'roboto-font', // optional, you are not bound to it
       'material-icons', // optional, you are not bound to it
+
+      // 'roboto-font', // optional, you are not bound to it
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
+      rtl: true,
       target: {
         browser: 'baseline-widely-available',
         node: 'node22',
+      },
+
+      vite: {
+        css: {
+          preprocessorOptions: {
+            scss: {
+              additionalData: `@use "src/css/variables.scss" as *;`
+            }
+          }
+        }
       },
 
       typescript: {
@@ -44,7 +55,7 @@ export default defineConfig((ctx) => {
         // extendTsConfig (tsConfig) {}
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -98,12 +109,23 @@ export default defineConfig((ctx) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
       // https: true,
-      open: true, // opens browser window automatically
+      open: false, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
-      config: {},
+      lang: 'en-US',
+      devTreeshaking: true,
+      rtlSupport: true,
+      config: {
+        dark: true, // or 'auto' for auto-switching based on system settings
+        notify: {
+          position: 'bottom-right',
+          timeout: 3000,
+          closeOnClick: true,
+          pauseOnHover: true,
+        },
+      },
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -116,7 +138,11 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        'Dark',
+        'Notify',
+        'LocalStorage'
+      ],
     },
 
     // animations: 'all', // --- includes all animations
