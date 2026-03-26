@@ -39,6 +39,7 @@ watch(status, (newStatus) => {
     router.replace('/');
   } else if (newStatus === 'success') {
     if (!data.value?.id) {
+      
       router.replace('/patient-register');
     } else {
       userStore.setUser(data.value);
