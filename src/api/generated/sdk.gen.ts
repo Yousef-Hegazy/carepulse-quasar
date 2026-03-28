@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetApiPatientsProfileData, GetApiPatientsProfileErrors, GetApiPatientsProfileResponses, GetHelloData, GetHelloResponses } from './types.gen';
+import type { GetApiPatientsProfileData, GetApiPatientsProfileResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -18,21 +18,8 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: Record<string, unknown>;
 };
 
-/**
- * Get Patient Profile
- */
-export const getApiPatientsProfile = <ThrowOnError extends boolean = false>(options?: Options<GetApiPatientsProfileData, ThrowOnError>) => (options?.client ?? client).get<GetApiPatientsProfileResponses, GetApiPatientsProfileErrors, ThrowOnError>({
+export const getApiPatientsProfile = <ThrowOnError extends boolean = false>(options?: Options<GetApiPatientsProfileData, ThrowOnError>) => (options?.client ?? client).get<GetApiPatientsProfileResponses, unknown, ThrowOnError>({
     responseType: 'json',
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/patients/profile',
-    ...options
-});
-
-/**
- * Hello
- */
-export const getHello = <ThrowOnError extends boolean = false>(options?: Options<GetHelloData, ThrowOnError>) => (options?.client ?? client).get<GetHelloResponses, unknown, ThrowOnError>({
-    responseType: 'text',
-    url: '/hello',
+    url: '/api/Patients/profile',
     ...options
 });

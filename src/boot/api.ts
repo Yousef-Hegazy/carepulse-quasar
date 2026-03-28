@@ -17,7 +17,7 @@ export default defineBoot(({app}) => {
     response => response,
     async (error: AxiosError) => {
       if (error.response?.status === 401) {
-        await keycloak.login();
+        // await keycloak.login();
       }
       return Promise.reject(error);
     }

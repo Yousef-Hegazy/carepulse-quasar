@@ -4,8 +4,8 @@ import { type DefaultError, queryOptions } from '@tanstack/vue-query';
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { getApiPatientsProfile, getHello, type Options } from '../sdk.gen';
-import type { GetApiPatientsProfileData, GetApiPatientsProfileResponse, GetHelloData, GetHelloResponse } from '../types.gen';
+import { getApiPatientsProfile, type Options } from '../sdk.gen';
+import type { GetApiPatientsProfileData, GetApiPatientsProfileResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -42,9 +42,6 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
 
 export const getApiPatientsProfileQueryKey = (options?: Options<GetApiPatientsProfileData>) => createQueryKey('getApiPatientsProfile', options);
 
-/**
- * Get Patient Profile
- */
 export const getApiPatientsProfileOptions = (options?: Options<GetApiPatientsProfileData>) => queryOptions<GetApiPatientsProfileResponse, AxiosError<DefaultError>, GetApiPatientsProfileResponse, ReturnType<typeof getApiPatientsProfileQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await getApiPatientsProfile({
@@ -56,22 +53,4 @@ export const getApiPatientsProfileOptions = (options?: Options<GetApiPatientsPro
         return data;
     },
     queryKey: getApiPatientsProfileQueryKey(options)
-});
-
-export const getHelloQueryKey = (options?: Options<GetHelloData>) => createQueryKey('getHello', options);
-
-/**
- * Hello
- */
-export const getHelloOptions = (options?: Options<GetHelloData>) => queryOptions<GetHelloResponse, AxiosError<DefaultError>, GetHelloResponse, ReturnType<typeof getHelloQueryKey>>({
-    queryFn: async ({ queryKey, signal }) => {
-        const { data } = await getHello({
-            ...options,
-            ...queryKey[0],
-            signal,
-            throwOnError: true
-        });
-        return data;
-    },
-    queryKey: getHelloQueryKey(options)
 });
