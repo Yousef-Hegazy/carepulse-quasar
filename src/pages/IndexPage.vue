@@ -24,22 +24,6 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
       </div>
     </section>
 
-    <q-img src="assets/images/onboarding-img.png" class="col-grow" />
+    <q-img src="assets/images/onboarding-img.png" alt="Onboarding" class="col-grow side-img" />
   </q-page>
 </template>
-
-<style lang="scss" scoped>
-.max-w-xxs {
-  max-width: $bp-xxs;
-  width: 100%;
-}
-
-// .carepulse {
-//   width: 4rem;
-//   height: 2.5rem;
-
-//   img {
-//     height: 100%;
-//   }
-// }
-</style>

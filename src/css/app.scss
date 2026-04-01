@@ -11,17 +11,17 @@ body {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    /* Replace #1d1d1d with your dark background color */
-    -webkit-box-shadow: 0 0 0 1000px $dark-page inset !important;
-    
-    /* This handles the text color (use #ffffff for dark mode) */
-    -webkit-text-fill-color: white !important;
-    
-    /* Transitions help prevent a "flash" of yellow on load */
-    transition: background-color 5000s ease-in-out 0s;
+  /* Replace #1d1d1d with your dark background color */
+  -webkit-box-shadow: 0 0 0 1000px $dark-page inset !important;
+
+  /* This handles the text color (use #ffffff for dark mode) */
+  -webkit-text-fill-color: white !important;
+
+  /* Transitions help prevent a "flash" of yellow on load */
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 // Utility mixin to hide scrollbars in WebKit-based browsers.
@@ -72,6 +72,10 @@ input:-webkit-autofill:active {
 // Tailwind-style utility classes converted to pure SCSS
 // (Converted from @apply directives to explicit CSS properties)
 
+.max-w-xxs {
+  max-width: $bp-xxs;
+  width: 100%;
+}
 
 $black-800: dark(400);
 $black-900: dark(300);
@@ -132,28 +136,6 @@ $black-900: dark(300);
 
   @media (min-width: $bp-md) {
     font-size: 1.5rem;
-  }
-}
-
-.side-img {
-  display: none;
-  height: 100%;
-  object-fit: cover;
-
-  @media (min-width: $bp-md) {
-    display: block;
-  }
-}
-
-.copyright {
-  font-size: 0.875rem;
-  font-weight: 400;
-  justify-items: end;
-  text-align: center;
-  color: dark(600);
-
-  @media (min-width: $bp-xl) {
-    text-align: left;
   }
 }
 
@@ -232,5 +214,49 @@ $black-900: dark(300);
 
   @media (min-width: $bp-xl) {
     gap: 2.5rem;
+  }
+}
+
+.q-stepper {
+  box-shadow: none;
+
+  & .q-stepper__tab {
+    background-color: transparent;
+    margin: 0 1.5rem 0 1.5rem;
+    flex-shrink: 0;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+
+    &.q-stepper__tab--done {
+      margin-bottom: 0;
+    }
+
+    &.q-stepper__tab--active {
+      background-color: rgba($primary, 0.08);
+
+      & .q-stepper__dot {
+        font-size: 1.25rem;
+        background-color: transparent;
+        color: $primary;
+        fill: $primary;
+
+        & .q-icon {
+          color: $primary;
+          fill: $primary;
+        }
+      }
+    }
+
+    & .q-stepper__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  }
+
+  & .q-stepper__step-content {
+    margin-top: 1.5rem;
+    & .q-stepper__step-inner {
+      padding: 0 1.5rem 0 1.5rem;
+    }
   }
 }

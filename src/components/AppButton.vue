@@ -15,7 +15,7 @@ defineOptions({
 </script>
 
 <template>
-  <q-btn v-bind="{ ...props, ...$attrs }" class="app-btn">
+  <q-btn class="app-btn" v-bind="{ ...props, ...$attrs }">
     <template v-for="(_, name) in $slots" #[name]="slotProps">
       <slot :name="name" v-bind="slotProps || {}" />
     </template>

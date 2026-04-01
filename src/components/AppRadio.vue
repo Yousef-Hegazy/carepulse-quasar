@@ -12,7 +12,7 @@ defineOptions({
 </script>
 
 <template>
-  <q-radio v-bind="{ ...props, ...$attrs }" class="app-radio">
+  <q-radio class="app-radio" v-bind="{ ...props, ...$attrs }">
     <template v-for="(_, name) in $slots" #[name]="slotProps">
       <slot :name="name" v-bind="slotProps || {}" />
     </template>
