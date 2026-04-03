@@ -10,15 +10,20 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
     </div>
 
     <section class="remove-scrollbar container q-mt-xl col-grow">
-      <div class="sub-container max-w-xxs">
+      <div class="sub-container full-width">
         <q-img
           src="assets/icons/logo-full.svg"
           alt="CarePulse Logo"
           fit="contain"
           width="10.8rem"
           height="auto"
-          class="q-mb-xl"
+          class="q-mb-sm"
         />
+
+        <div class="q-mb-sm">
+          <h3 class="q-mb-sm header">Welcome 👋</h3>
+          <p class="text-grey-5">Let us know more about you.</p>
+        </div>
 
         <register-patient-form />
       </div>

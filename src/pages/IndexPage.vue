@@ -24,6 +24,6 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
       </div>
     </section>
 
-    <q-img src="assets/images/onboarding-img.png" alt="Onboarding" class="col-grow side-img" />
+    <q-img src="assets/images/onboarding-img.png" alt="Onboarding" class="col-grow gt-sm" />
   </q-page>
 </template>

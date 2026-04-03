@@ -7,23 +7,17 @@ const props = withDefaults(defineProps<QBtnProps>(), {
   ripple: false,
   size: 'md',
   dense: false,
+  type: 'button',
 });
-
 defineOptions({
   inheritAttrs: false,
 });
 </script>
 
 <template>
-  <q-btn class="app-btn" v-bind="{ ...props, ...$attrs }">
+  <q-btn v-bind="{ ...props, ...$attrs }" :class="['app-btn', $attrs.class]">
     <template v-for="(_, name) in $slots" #[name]="slotProps">
       <slot :name="name" v-bind="slotProps || {}" />
     </template>
   </q-btn>
 </template>
-
-<style lang="scss">
-.app-btn {
-  font-weight: 600;
-}
-</style>

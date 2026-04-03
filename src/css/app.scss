@@ -69,6 +69,7 @@ input:-webkit-autofill:active {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
+
 // Tailwind-style utility classes converted to pure SCSS
 // (Converted from @apply directives to explicit CSS properties)
 
@@ -177,9 +178,8 @@ $black-900: dark(300);
   border-radius: 1rem;
   background-color: dark(200);
   padding: 1.25rem 5%;
-  box-shadow:
-    0 10px 15px -3px rgba(0, 0, 0, 0.1),
-    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
   @media (min-width: $bp-xl) {
     padding-left: 3rem;
@@ -217,8 +217,71 @@ $black-900: dark(300);
   }
 }
 
+.app-btn {
+  font-weight: 600;
+}
+
+.app-radio {
+  font-weight: 600;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  transition: all $generic-hover-transition;
+  border-radius: $generic-border-radius;
+  border: 1px solid transparent;
+
+  &[aria-checked='true'] {
+    border-color: $primary;
+    background-color: rgba($primary, 0.1);
+  }
+
+  &:hover {
+    background-color: rgba($primary, 0.1);
+  }
+
+  & .q-radio__inner::before {
+    opacity: 0 !important;
+  }
+}
+
+.app-input {
+  font-weight: 600;
+
+  &.q-field--focused {
+    & .q-icon {
+      color: $primary;
+    }
+  }
+
+  & .q-field__control {
+    border-radius: 12px;
+
+    &.text-negative {
+      & .q-icon {
+        color: $negative;
+      }
+    }
+
+    & .q-field__label {
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+}
+
 .q-stepper {
   box-shadow: none;
+
+  & .q-stepper__content {
+    transition: all 0.3s ease;
+
+    & .q-stepper__step {
+      margin-bottom: 1rem;
+    }
+
+    & .q-stepper__step:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   & .q-stepper__tab {
     background-color: transparent;
@@ -227,11 +290,17 @@ $black-900: dark(300);
     border-radius: 0.75rem;
     transition: all 0.3s ease;
 
+    & .q-stepper__dot {
+      &::after {
+        display: none !important;
+      }
+    }
+
     &.q-stepper__tab--done {
       margin-bottom: 0;
     }
 
-    &.q-stepper__tab--active {
+    &.q-stepper__tab--active:not(.q-stepper__tab--error) {
       background-color: rgba($primary, 0.08);
 
       & .q-stepper__dot {
@@ -255,8 +324,53 @@ $black-900: dark(300);
 
   & .q-stepper__step-content {
     margin-top: 1.5rem;
+
     & .q-stepper__step-inner {
       padding: 0 1.5rem 0 1.5rem;
+    }
+  }
+}
+
+.body--dark {
+  & .q-menu {
+    background-color: $grey-10 !important;
+
+    & .q-virtual-scroll__content {
+      & .q-item {
+        color: $grey-2;
+
+        &:hover,
+        &--active {
+          background-color: $grey-9 !important;
+        }
+
+        &.q-item--active {
+          background-color: $primary !important;
+          color: white;
+        }
+      }
+    }
+  }
+
+  & .app-checkbox:not(.disabled) {
+
+    & .q-checkbox__label {
+      transition: all 0.3s ease;
+    }
+
+    & .q-checkbox__inner::before {
+      opacity: 0 !important;
+    }
+
+    & .q-checkbox__inner.q-checkbox__inner--falsy {
+      color: $grey-2;
+    }
+
+    &[aria-checked='true'] {
+      & .q-checkbox__label {
+        color: $primary !important;
+        font-weight: 700;
+      }
     }
   }
 }

@@ -1,5 +1,3 @@
-import { storeToRefs } from 'pinia';
-import { useUserStore } from 'src/stores/user';
 import type { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
@@ -19,6 +17,10 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'patient-register',
         component: () => import('pages/PatientRegister.vue'),
+      },
+      {
+        path: 'patient-dashboard',
+        component: () => import('pages/PatientDashboard.vue'),
       }
     ],
   },

@@ -2,7 +2,14 @@ import { acceptHMRUpdate, defineStore } from 'pinia';
 import { type PatientResponse } from 'src/api/generated';
 
 interface UserStoreState {
-  user: PatientResponse | null;
+  user: PatientResponse & {
+    firstName: string;
+    familyName: string;
+    fullName: string;
+    email: string;
+    emailVerified: boolean;
+    username: string;
+  } | null;
 }
 
 export const useUserStore = defineStore('userStore', {

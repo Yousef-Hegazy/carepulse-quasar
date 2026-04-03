@@ -21,20 +21,3 @@ defineOptions({
     </template>
   </q-input>
 </template>
-
-<style lang="scss">
-.app-input {
-  font-weight: 600;
-
-  &.q-field--focused {
-    & .q-icon {
-      color: $primary;
-    }
-  }
-  & .q-field__control.text-negative {
-    & .q-icon {
-      color: $negative;
-    }
-  }
-}
-</style>
