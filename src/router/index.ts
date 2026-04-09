@@ -6,6 +6,8 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { useAuthStore } from 'src/stores/auth';
+import { storeToRefs } from 'pinia';
 
 /*
  * If not building with SSR mode, you can
@@ -19,7 +21,7 @@ import routes from './routes';
 export default defineRouter(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : process.env.VITE_APP_VUE_ROUTER_MODE === 'history'
+    : process.env.MODE === 'spa'
       ? createWebHistory
       : createWebHashHistory;
 
@@ -32,6 +34,21 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
+
+  Router.beforeEach((to, from, next) => {
+    const isPublic = to.matched.some(record => record.meta.public);
+    if (isPublic) {
+      next();
+    } else {
+      const authStore = useAuthStore();
+      const { isAuthenticated } = storeToRefs(authStore);
+      if (isAuthenticated.value) {
+        next();
+      } else {
+        next('/');
+      }
+    }
+  })
 
   return Router;
 });

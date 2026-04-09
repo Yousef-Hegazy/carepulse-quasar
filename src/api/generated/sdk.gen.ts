@@ -2,7 +2,7 @@
 
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { GetApiPatientsProfileData, GetApiPatientsProfileResponses, PostApiPatientsData, PostApiPatientsResponses } from './types.gen';
+import type { GetApiAuthManageInfoData, GetApiAuthManageInfoErrors, GetApiAuthManageInfoResponses, GetApiPatientsProfileData, GetApiPatientsProfileResponses, MapIdentityApiApiAuthConfirmEmailData, MapIdentityApiApiAuthConfirmEmailResponses, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordErrors, PostApiAuthForgotPasswordResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthManage2FaData, PostApiAuthManage2FaErrors, PostApiAuthManage2FaResponses, PostApiAuthManageInfoData, PostApiAuthManageInfoErrors, PostApiAuthManageInfoResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses, PostApiAuthRegisterData, PostApiAuthRegisterErrors, PostApiAuthRegisterResponses, PostApiAuthResendConfirmationEmailData, PostApiAuthResendConfirmationEmailResponses, PostApiAuthResetPasswordData, PostApiAuthResetPasswordErrors, PostApiAuthResetPasswordResponses, PostApiPatientsData, PostApiPatientsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -17,6 +17,90 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: Record<string, unknown>;
 };
+
+export const postApiAuthRegister = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthRegisterData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthRegisterResponses, PostApiAuthRegisterErrors, ThrowOnError>({
+    url: '/api/auth/register',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthLogin = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthLoginData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthLoginResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/auth/login',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthRefresh = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthRefreshData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthRefreshResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/auth/refresh',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const mapIdentityApiApiAuthConfirmEmail = <ThrowOnError extends boolean = false>(options: Options<MapIdentityApiApiAuthConfirmEmailData, ThrowOnError>) => (options.client ?? client).get<MapIdentityApiApiAuthConfirmEmailResponses, unknown, ThrowOnError>({ url: '/api/auth/confirmEmail', ...options });
+
+export const postApiAuthResendConfirmationEmail = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthResendConfirmationEmailData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthResendConfirmationEmailResponses, unknown, ThrowOnError>({
+    url: '/api/auth/resendConfirmationEmail',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthForgotPassword = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthForgotPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthForgotPasswordResponses, PostApiAuthForgotPasswordErrors, ThrowOnError>({
+    url: '/api/auth/forgotPassword',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthResetPassword = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthResetPasswordData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthResetPasswordResponses, PostApiAuthResetPasswordErrors, ThrowOnError>({
+    url: '/api/auth/resetPassword',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const postApiAuthManage2Fa = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthManage2FaData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthManage2FaResponses, PostApiAuthManage2FaErrors, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/auth/manage/2fa',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const getApiAuthManageInfo = <ThrowOnError extends boolean = false>(options?: Options<GetApiAuthManageInfoData, ThrowOnError>) => (options?.client ?? client).get<GetApiAuthManageInfoResponses, GetApiAuthManageInfoErrors, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/auth/manage/info',
+    ...options
+});
+
+export const postApiAuthManageInfo = <ThrowOnError extends boolean = false>(options: Options<PostApiAuthManageInfoData, ThrowOnError>) => (options.client ?? client).post<PostApiAuthManageInfoResponses, PostApiAuthManageInfoErrors, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/auth/manage/info',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 export const getApiPatientsProfile = <ThrowOnError extends boolean = false>(options?: Options<GetApiPatientsProfileData, ThrowOnError>) => (options?.client ?? client).get<GetApiPatientsProfileResponses, unknown, ThrowOnError>({
     responseType: 'json',

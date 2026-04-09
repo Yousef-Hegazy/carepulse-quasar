@@ -24,7 +24,7 @@ const setLanguage = (lang: string) => {
 </script>
 
 <template>
-  <app-button :icon="`img:/assets/icons/${locale}.svg`">
+  <q-btn :icon="`img:/assets/icons/${locale}.svg`">
     <q-menu auto-close transition-show="fade" transition-hide="fade">
       <q-list style="min-width: 120px">
         <q-item clickable @click="setLanguage('en-US')">
@@ -42,5 +42,5 @@ const setLanguage = (lang: string) => {
         </q-item>
       </q-list>
     </q-menu>
-  </app-button>
+  </q-btn>
 </template>

@@ -3,6 +3,7 @@
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { defineConfig } from '#q-app/wrappers';
 import { fileURLToPath } from 'node:url';
+import { QBtn } from 'quasar';
 
 export default defineConfig((ctx) => {
   return {
@@ -12,7 +13,7 @@ export default defineConfig((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'quasar-lang-pack', 'keycloak', 'vue-query', 'api'],
+    boot: ['theme', 'i18n', 'quasar-lang-pack', 'api', 'vue-query'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],

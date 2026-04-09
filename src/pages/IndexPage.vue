@@ -5,7 +5,7 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
 
 <template>
   <q-page class="q-p-none row no-wrap full-width full-height">
-    <div class="absolute-top-left q-pa-sm">
+    <div class="absolute-top-left q-pa-sm q-pt-lg">
       <language-switcher />
     </div>
 

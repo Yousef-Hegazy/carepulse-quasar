@@ -1,25 +1,22 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import AppButton from '../AppButton.vue';
-import AppRadio from '../AppRadio.vue';
-import AppInput from '../AppInput.vue';
-import AppDatePicker from '../AppDatePicker.vue';
-import AppAutocomplete from '../AppAutocomplete.vue';
-import AppFileInput from '../AppFileInput.vue';
+import { useMutation } from '@tanstack/vue-query';
+import { QForm, useQuasar } from 'quasar';
+import type { Gender, PostApiPatientsData } from 'src/api/generated';
+import { postApiPatientsMutation } from 'src/api/generated/@tanstack/vue-query.gen';
+import { useAutocompleteSearch } from 'src/composables/useAutocompleteSearch';
 import { Doctors } from 'src/lib/doctors';
 import { IdentificationTypes } from 'src/lib/identification-types';
-import AppCheckbox from '../AppCheckbox.vue';
+import { useAuthStore } from 'src/stores/auth';
+import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { QForm, useQuasar } from 'quasar';
-import { useMutation } from '@tanstack/vue-query';
-import { postApiPatientsMutation } from 'src/api/generated/@tanstack/vue-query.gen';
-import type { Gender } from 'src/api/generated';
+import { useRouter } from 'vue-router';
+import AppDatePicker from '../AppDatePicker.vue';
 
-const { locale } = useI18n();
+const { t, locale } = useI18n();
 const step = ref(1);
 const q = useQuasar();
 
-const doctorOptions = computed(() =>
+const { filteredOptions: doctorOptions, filterFn: doctorFilterFn } = useAutocompleteSearch(() =>
   Doctors.map((doctor) => ({
     label: locale.value === 'ar' ? doctor.nameAr : doctor.nameEn,
     value: doctor.nameEn,
@@ -27,16 +24,16 @@ const doctorOptions = computed(() =>
   })),
 );
 
-const identificationTypeOptions = computed(() =>
-  IdentificationTypes.map((type) => ({
-    label: locale.value === 'ar' ? type.ar : type.en,
-    value: type.en,
-  })),
-);
+const { filteredOptions: identificationTypeOptions, filterFn: identificationTypeFilterFn } =
+  useAutocompleteSearch(() =>
+    IdentificationTypes.map((type) => ({
+      label: locale.value === 'ar' ? type.ar : type.en,
+      value: type.en,
+    })),
+  );
 
 const formValues = reactive<{
   name: string;
-  email: string;
   phone: string;
   birthDate: string;
   gender: Gender;
@@ -57,7 +54,6 @@ const formValues = reactive<{
   privacyConsent: boolean;
 }>({
   name: '',
-  email: '',
   phone: '',
   birthDate: '',
   gender: 'Male',
@@ -84,6 +80,8 @@ const parseDate = (date: string) => {
 };
 
 const submitMutation = useMutation(postApiPatientsMutation());
+const authStore = useAuthStore();
+const router = useRouter();
 
 // Step error states
 const step1HasError = ref(false);
@@ -112,7 +110,7 @@ const onFinalSubmit = async () => {
   if (!formRef1.value || !formRef2.value || !formRef3.value) {
     q.notify({
       type: 'negative',
-      message: 'Please make sure to check all the forms and enter valid data',
+      message: t('registerPatientForm.notifications.incompleteForms'),
     });
 
     if (!formRef1.value) {
@@ -135,7 +133,7 @@ const onFinalSubmit = async () => {
     if (!isValid) {
       q.notify({
         type: 'negative',
-        message: 'Please make sure that Personal Information are all valid.',
+        message: t('registerPatientForm.notifications.personalInfoInvalid'),
       });
     }
   } else {
@@ -149,7 +147,7 @@ const onFinalSubmit = async () => {
     if (!isValid) {
       q.notify({
         type: 'negative',
-        message: 'Please make sure that Medical Information are all valid.',
+        message: t('registerPatientForm.notifications.medicalInfoInvalid'),
       });
     }
   } else {
@@ -163,7 +161,7 @@ const onFinalSubmit = async () => {
     if (!isValid) {
       q.notify({
         type: 'negative',
-        message: 'Please make sure that Identification and Verification are all valid.',
+        message: t('registerPatientForm.notifications.identificationInvalid'),
       });
       return;
     }
@@ -172,28 +170,73 @@ const onFinalSubmit = async () => {
   }
 
   // All steps valid - handle form submission
-  console.log('Form submitted:', { ...formValues });
-  submitMutation.mutate({
-    body: {
-      Address: formValues.address,
-      Allergies: formValues.allergies,
-      BirthDate: formValues.birthDate ? parseDate(formValues.birthDate).toISOString() : undefined,
-      CurrentMedication: formValues.currentMedication,
-      EmergencyContactName: formValues.emergencyContactName,
-      EmergencyContactNumber: formValues.emergencyContactPhone,
-      FamilyMedicalHistory: formValues.familyMedicalHistory,
-      Gender: formValues.gender,
-      IdentificationDocument: formValues.scannedIdentification || undefined,
-      IdentificationNumber: formValues.identificationNumber,
-      IdentificationType: formValues.identificationType?.value,
-      InsurancePolicyNumber: formValues.insurancePolicyNumber,
-      InsuranceProvider: formValues.insuranceProvider,
-      Occupation: formValues.occupation,
-      PastMedicalHistory: formValues.pastMedicalHistory,
-      PrimaryPhysicianName: formValues.primaryCarePhysician?.value,
-      PrivacyConsent: formValues.privacyConsent,
+  const formData = new FormData();
+  formData.append('Address', formValues.address);
+  formData.append('Allergies', formValues.allergies);
+
+  if (formValues.birthDate) {
+    formData.append('BirthDate', parseDate(formValues.birthDate).toISOString());
+  }
+
+  formData.append('CurrentMedication', formValues.currentMedication);
+  formData.append('EmergencyContactName', formValues.emergencyContactName);
+  formData.append('EmergencyContactNumber', formValues.emergencyContactPhone);
+  formData.append('FamilyMedicalHistory', formValues.familyMedicalHistory);
+  formData.append('Gender', formValues.gender);
+
+  if (formValues.scannedIdentification) {
+    formData.append(
+      'IdentificationDocument',
+      formValues.scannedIdentification,
+      formValues.scannedIdentification.name,
+    );
+  }
+
+  formData.append('IdentificationNumber', formValues.identificationNumber);
+
+  if (formValues.identificationType?.value) {
+    formData.append('IdentificationType', formValues.identificationType.value);
+  }
+
+  formData.append('InsurancePolicyNumber', formValues.insurancePolicyNumber);
+  formData.append('InsuranceProvider', formValues.insuranceProvider);
+  formData.append('Occupation', formValues.occupation);
+  formData.append('PastMedicalHistory', formValues.pastMedicalHistory);
+
+  if (formValues.primaryCarePhysician?.value) {
+    formData.append('PrimaryPhysicianName', formValues.primaryCarePhysician.value);
+  }
+
+  formData.append('PrivacyConsent', String(formValues.privacyConsent));
+  formData.append('FullName', formValues.name);
+  formData.append('PhoneNumber', formValues.phone);
+
+  submitMutation.mutate(
+    {
+      headers: { 'Content-Type': null },
+      bodySerializer: null,
+      body: formData as unknown as PostApiPatientsData['body'],
     },
-  });
+    {
+      onSuccess: (data) => {
+        q.notify({
+          type: 'positive',
+          message: t('registerPatientForm.notifications.submitSuccess'),
+        });
+
+        authStore.setUser(data);
+
+        router.replace('/patient-dashboard');
+      },
+      onError: (error) => {
+        q.notify({
+          type: 'negative',
+          message: t('registerPatientForm.notifications.submitError'),
+          caption: error.message || '',
+        });
+      },
+    },
+  );
 };
 </script>
 
@@ -201,138 +244,179 @@ const onFinalSubmit = async () => {
   <q-stepper v-model="step" vertical header-nav animated keep-alive>
     <q-step
       :name="1"
-      title="Personal Information"
+      :title="t('registerPatientForm.steps.personalInfo.title')"
       icon="eva-people-outline"
       :done="step > 1"
       :error="step1HasError"
     >
       <q-form ref="formRef1" @submit.prevent="onStep1Submit">
         <div class="row q-col-gutter-sm">
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.name"
-            label="Full Name"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter your name']"
+            :label="t('registerPatientForm.fields.fullName')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || t('registerPatientForm.validation.nameRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-person-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <!-- <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.email"
-            label="Email Address"
+            :label="t('registerPatientForm.fields.emailAddress')"
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please enter your email',
+              (val) =>
+                (val !== null && val !== '') || t('registerPatientForm.validation.emailRequired'),
               (val) =>
                 !val ||
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ||
-                'Please enter a valid email address',
+                t('registerPatientForm.validation.emailInvalid'),
             ]"
           >
             <template #prepend>
               <q-icon name="eva-email-outline" />
             </template>
-          </app-input>
+          </q-input> -->
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.phone"
-            label="Phone Number"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter your phone number']"
+            :label="t('registerPatientForm.fields.phoneNumber')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || t('registerPatientForm.validation.phoneRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-phone-outline" />
             </template>
-          </app-input>
+          </q-input>
 
           <app-date-picker
             v-model="formValues.birthDate"
-            label="Date of Birth"
-            class="col-6"
+            :label="t('registerPatientForm.fields.dateOfBirth')"
+            class="col-12 col-md-6"
             :rules="[
-              (val: string) => (val !== null && val !== '') || 'Please select your date of birth',
+              (val: string) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.birthDateRequired'),
             ]"
           />
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.address"
-            label="Address"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter your address']"
+            :label="t('registerPatientForm.fields.address')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') || t('registerPatientForm.validation.addressRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-map-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.occupation"
-            label="Occupation"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter your occupation']"
+            :label="t('registerPatientForm.fields.occupation')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.occupationRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-briefcase-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.emergencyContactName"
-            label="Emergency Contact Name"
+            :label="t('registerPatientForm.fields.emergencyContactName')"
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please enter emergency contact name',
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.emergencyContactNameRequired'),
             ]"
           >
             <template #prepend>
               <q-icon name="eva-alert-triangle-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.emergencyContactPhone"
-            label="Emergency Contact Phone"
+            :label="t('registerPatientForm.fields.emergencyContactPhone')"
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please enter emergency contact phone',
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.emergencyContactPhoneRequired'),
             ]"
           >
             <template #prepend>
               <q-icon name="eva-phone-outline" />
             </template>
-          </app-input>
+          </q-input>
 
           <div class="col-12">
-            <p>Gender</p>
+            <p>{{ t('registerPatientForm.fields.gender') }}</p>
             <div class="q-gutter-x-xs row">
-              <app-radio v-model="formValues.gender" val="Male" label="Male" class="col" />
-              <app-radio v-model="formValues.gender" val="Female" label="Female" class="col" />
-              <app-radio v-model="formValues.gender" val="Other" label="Other" class="col" />
+              <q-radio
+                v-model="formValues.gender"
+                val="Male"
+                :label="t('registerPatientForm.genderOptions.male')"
+                class="col"
+              />
+              <q-radio
+                v-model="formValues.gender"
+                val="Female"
+                :label="t('registerPatientForm.genderOptions.female')"
+                class="col"
+              />
+              <q-radio
+                v-model="formValues.gender"
+                val="Other"
+                :label="t('registerPatientForm.genderOptions.other')"
+                class="col"
+              />
             </div>
           </div>
         </div>
 
         <q-stepper-navigation>
-          <app-button type="button" color="primary" label="Continue" @click="onStep1Submit" />
+          <q-btn
+            type="button"
+            color="primary"
+            :label="t('registerPatientForm.actions.continue')"
+            @click="onStep1Submit"
+          />
         </q-stepper-navigation>
       </q-form>
     </q-step>
 
     <q-step
       :name="2"
-      title="Medical Information"
+      :title="t('registerPatientForm.steps.medicalInfo.title')"
       icon="eva-activity-outline"
       :done="step > 2"
       :error="step2HasError"
     >
       <q-form ref="formRef2" @submit.prevent="onStep2Submit">
         <div class="row q-col-gutter-sm">
-          <app-autocomplete
+          <q-select
             v-model="formValues.primaryCarePhysician"
             :options="doctorOptions"
-            label="Primary Care Physician"
+            @filter="doctorFilterFn"
+            :label="t('registerPatientForm.fields.primaryCarePhysician')"
             class="col-12"
             option-value="value"
             option-label="label"
@@ -340,7 +424,9 @@ const onFinalSubmit = async () => {
             clearable
             display-value=""
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please select primary care physician',
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.primaryCarePhysicianRequired'),
             ]"
           >
             <template #prepend>
@@ -366,68 +452,79 @@ const onFinalSubmit = async () => {
                 {{ scope.opt?.label }}
               </q-chip>
             </template>
-          </app-autocomplete>
+          </q-select>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.insuranceProvider"
-            label="Insurance Provider"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter insurance provider']"
+            :label="t('registerPatientForm.fields.insuranceProvider')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.insuranceProviderRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-shield-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.insurancePolicyNumber"
-            label="Insurance Policy Number"
+            :label="t('registerPatientForm.fields.insurancePolicyNumber')"
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please enter insurance policy number',
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.insurancePolicyNumberRequired'),
             ]"
           >
             <template #prepend>
               <q-icon name="eva-file-text-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.allergies"
-            label="Allergies"
+            :label="t('registerPatientForm.fields.allergies')"
             type="textarea"
           />
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.currentMedication"
-            label="Current Medication"
+            :label="t('registerPatientForm.fields.currentMedication')"
             type="textarea"
           />
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.familyMedicalHistory"
-            label="Family Medical History"
+            :label="t('registerPatientForm.fields.familyMedicalHistory')"
             type="textarea"
           />
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.pastMedicalHistory"
-            label="Past Medical History"
+            :label="t('registerPatientForm.fields.pastMedicalHistory')"
             type="textarea"
           />
         </div>
 
         <q-stepper-navigation>
-          <app-button type="button" color="primary" label="Continue" @click="onStep2Submit" />
-          <app-button
+          <q-btn
+            type="button"
+            color="primary"
+            :label="t('registerPatientForm.actions.continue')"
+            @click="onStep2Submit"
+          />
+          <q-btn
             type="button"
             flat
             color="primary"
-            label="Back"
+            :label="t('registerPatientForm.actions.back')"
             class="q-ml-sm"
             @click="step = 1"
           />
@@ -437,73 +534,84 @@ const onFinalSubmit = async () => {
 
     <q-step
       :name="3"
-      title="Identification and Verification"
+      :title="t('registerPatientForm.steps.identification.title')"
       icon="eva-shield-outline"
       :done="step > 3"
       :error="step3HasError"
     >
       <q-form ref="formRef3" @submit.prevent="onFinalSubmit">
         <div class="row q-col-gutter-sm">
-          <app-autocomplete
+          <q-select
             v-model="formValues.identificationType"
             :options="identificationTypeOptions"
-            label="Identification Type"
+            @filter="identificationTypeFilterFn"
+            :label="t('registerPatientForm.fields.identificationType')"
             class="col-12"
             option-value="value"
             option-label="label"
             :fill-input="false"
             clearable
-            :rules="[(val) => (val !== null && val !== '') || 'Please select identification type']"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.identificationTypeRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-credit-card-outline" />
             </template>
-          </app-autocomplete>
+          </q-select>
 
-          <app-input
-            class="app-input col-6"
+          <q-input
+            class="q-input col-12 col-md-6"
             v-model="formValues.identificationNumber"
-            label="Identification Number"
-            :rules="[(val) => (val !== null && val !== '') || 'Please enter identification number']"
+            :label="t('registerPatientForm.fields.identificationNumber')"
+            :rules="[
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.identificationNumberRequired'),
+            ]"
           >
             <template #prepend>
               <q-icon name="eva-hash-outline" />
             </template>
-          </app-input>
+          </q-input>
 
-          <app-file-input
-            class="app-input col-6"
+          <q-file
+            class="q-input col-12 col-md-6"
             v-model="formValues.scannedIdentification"
-            label="Scanned Copy of Identification Document"
+            :label="t('registerPatientForm.fields.scannedIdentification')"
             accept=".pdf,.jpg,.jpeg,.png"
             :rules="[
-              (val) => (val !== null && val !== '') || 'Please upload identification document',
+              (val) =>
+                (val !== null && val !== '') ||
+                t('registerPatientForm.validation.scannedIdentificationRequired'),
             ]"
           >
             <template #prepend>
               <q-icon name="eva-file-outline" />
             </template>
-          </app-file-input>
+          </q-file>
 
-          <app-checkbox
+          <q-checkbox
             v-model="formValues.privacyConsent"
-            label="I acknowledge that I have reviewed and agree to the privacy policy"
+            :label="t('registerPatientForm.fields.privacyConsent')"
           />
         </div>
 
         <q-stepper-navigation>
-          <app-button
+          <q-btn
             type="button"
             color="primary"
             :loading="submitMutation.isPending.value"
-            label="Submit"
+            :label="t('registerPatientForm.actions.submit')"
             @click="onFinalSubmit"
           />
-          <app-button
+          <q-btn
             type="button"
             flat
             color="primary"
-            label="Back"
+            :label="t('registerPatientForm.actions.back')"
             class="q-ml-sm"
             @click="step = 2"
           />
@@ -514,3 +622,6 @@ const onFinalSubmit = async () => {
 </template>
 
 <style scoped></style>
+
+
+

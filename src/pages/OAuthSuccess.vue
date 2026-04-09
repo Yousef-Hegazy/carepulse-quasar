@@ -2,8 +2,7 @@
 import { useQuery } from '@tanstack/vue-query';
 import { useQuasar } from 'quasar';
 import { getApiPatientsProfileOptions } from 'src/api/generated/@tanstack/vue-query.gen';
-import { keycloak } from 'src/boot/keycloak';
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 import { watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -19,9 +18,9 @@ const { status, data, error } = useQuery({
   enabled: !!userType && userType === 'patient',
 });
 
-const userStore = useUserStore();
+const authStore = useAuthStore();
 
-watch(status, async (newStatus) => {
+watch(status, (newStatus) => {
   if (newStatus === 'error') {
     const res = error.value?.response?.data as any;
 
@@ -41,16 +40,7 @@ watch(status, async (newStatus) => {
     if (!data.value?.id) {
       router.replace('/patient-register');
     } else {
-      const kcUser = await keycloak.loadUserInfo();
-      userStore.setUser({
-        ...data.value,
-        firstName: kcUser['given_name'],
-        familyName: kcUser['family_name'],
-        fullName: kcUser['name'],
-        email: kcUser['email'],
-        emailVerified: kcUser['email_verified'],
-        username: kcUser['preferred_username'],
-      });
+      authStore.setUser(data.value);
       router.replace('/patient-dashboard');
     }
   }

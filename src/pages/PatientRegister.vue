@@ -1,6 +1,9 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import RegisterPatientForm from 'src/components/forms/RegisterPatientForm.vue';
 import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -13,7 +16,7 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
       <div class="sub-container full-width">
         <q-img
           src="assets/icons/logo-full.svg"
-          alt="CarePulse Logo"
+          :alt="t('patientRegisterPage.logoAlt')"
           fit="contain"
           width="10.8rem"
           height="auto"
@@ -21,8 +24,8 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
         />
 
         <div class="q-mb-sm">
-          <h3 class="q-mb-sm header">Welcome 👋</h3>
-          <p class="text-grey-5">Let us know more about you.</p>
+          <h3 class="q-mb-sm header">{{ t('patientRegisterPage.welcome') }} 👋</h3>
+          <p class="text-grey-5">{{ t('patientRegisterPage.subtitle') }}</p>
         </div>
 
         <register-patient-form />
@@ -31,7 +34,7 @@ import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
 
     <q-img
       src="assets/images/register-img.png"
-      alt="Register"
+      :alt="t('patientRegisterPage.registerImageAlt')"
       class="col-grow"
       v-if="$q.screen.gt.sm"
     />

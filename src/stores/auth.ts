@@ -1,54 +1,108 @@
-import type Keycloak from 'keycloak-js';
-import type { KeycloakLoginOptions, KeycloakLogoutOptions, KeycloakTokenParsed } from 'keycloak-js';
 import { acceptHMRUpdate, defineStore } from 'pinia';
-import { markRaw } from 'vue';
+import { getApiPatientsProfile, postApiAuthLogin, postApiAuthRefresh, postApiAuthRegister, type AccessTokenResponse, type LoginRequest, type PatientResponse, type RefreshRequest, type RegisterRequest } from 'src/api/generated';
 
-interface AuthState {
-  instance: Keycloak | undefined;
-  isAuthenticated: boolean;
-  profile: KeycloakTokenParsed | undefined;
-  token: string | undefined;
+export interface AuthState {
+  user: PatientResponse | null;
+  auth: AccessTokenResponse | null;
 }
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore('authStore', {
   state: (): AuthState => ({
-    instance: undefined,
-    isAuthenticated: false,
-    profile: undefined,
-    token: undefined
+    user: null,
+    auth: null
   }),
   getters: {
-    username: (state) => state.profile?.preferred_username || null,
-    userRoles: (state) => state.instance?.realmAccess?.roles || []
+    isAuthenticated: (state) => !!state.auth?.accessToken
   },
   actions: {
-    initialize(keycloakInstance: Keycloak, authenticated: boolean) {
-      this.instance = markRaw(keycloakInstance)
-      this.isAuthenticated = authenticated
-      this.token = keycloakInstance.token
-      this.profile = keycloakInstance.tokenParsed
+    setUser(user: AuthState['user']) {
+      this.user = user;
     },
-
-    async login(options?: KeycloakLoginOptions) {
-      await this.instance?.login(options)
+    setAuth(auth: AuthState['auth']) {
+      this.auth = auth;
     },
-
-    async logout(options?: KeycloakLogoutOptions) {
-      await this.instance?.logout({
-        redirectUri: window.location.origin,
-        ...options
-      })
-    },
-
-    async updateToken() {
+    async login(request: LoginRequest) {
       try {
-        const refreshed = await this.instance?.updateToken(70)
-        if (refreshed) {
-          this.token = this.instance?.token
-        }
+        const res = await postApiAuthLogin({
+          body: request
+        });
+
+        this.auth = res.data || null;
       } catch (error) {
-        console.error('Failed to refresh token', error)
-        await this.login()
+        console.log({ error });
+
+        this.auth = null;
+
+        throw error;
+      }
+
+      return this.auth;
+
+    },
+    async register(request: RegisterRequest) {
+      try {
+        const res = await postApiAuthRegister({
+          body: request
+        });
+
+
+
+        if (res.status === 200) {
+          return this.login({
+            email: request.email,
+            password: request.password
+          });
+        } else if (res.error) {
+          if (res.error.errors) {
+            throw new Error(Object.values(res.error.errors).flat().join(' '));
+          }
+
+        }
+
+      } catch (error) {
+        console.log({ error });
+
+        this.auth = null;
+        throw error;
+      }
+
+      return this.auth;
+    },
+    logout() {
+      this.auth = null;
+    },
+    async refresh(request: RefreshRequest) {
+      try {
+        const res = await postApiAuthRefresh({
+          body: request
+        });
+
+        this.auth = res.data || null;
+      } catch (error) {
+        console.log({ error });
+
+        this.auth = null;
+        throw error;
+      }
+
+      return this.auth;
+    },
+    async getUserProfile() {
+      if (!this.auth?.accessToken) {
+        this.user = null;
+        return null;
+      }
+
+      try {
+        const res = await getApiPatientsProfile();
+        this.user = res.data || null;
+        return this.user;
+
+      } catch (error) {
+        console.log({ error });
+
+        this.user = null;
+        throw error;
       }
     }
   }

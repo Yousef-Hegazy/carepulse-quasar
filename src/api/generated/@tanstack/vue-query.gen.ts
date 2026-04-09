@@ -4,8 +4,50 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { getApiPatientsProfile, type Options, postApiPatients } from '../sdk.gen';
-import type { GetApiPatientsProfileData, GetApiPatientsProfileResponse, PostApiPatientsData, PostApiPatientsResponse } from '../types.gen';
+import { getApiAuthManageInfo, getApiPatientsProfile, mapIdentityApiApiAuthConfirmEmail, type Options, postApiAuthForgotPassword, postApiAuthLogin, postApiAuthManage2Fa, postApiAuthManageInfo, postApiAuthRefresh, postApiAuthRegister, postApiAuthResendConfirmationEmail, postApiAuthResetPassword, postApiPatients } from '../sdk.gen';
+import type { GetApiAuthManageInfoData, GetApiAuthManageInfoError, GetApiAuthManageInfoResponse, GetApiPatientsProfileData, GetApiPatientsProfileResponse, MapIdentityApiApiAuthConfirmEmailData, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordError, PostApiAuthLoginData, PostApiAuthLoginResponse, PostApiAuthManage2FaData, PostApiAuthManage2FaError, PostApiAuthManage2FaResponse, PostApiAuthManageInfoData, PostApiAuthManageInfoError, PostApiAuthManageInfoResponse, PostApiAuthRefreshData, PostApiAuthRefreshResponse, PostApiAuthRegisterData, PostApiAuthRegisterError, PostApiAuthResendConfirmationEmailData, PostApiAuthResetPasswordData, PostApiAuthResetPasswordError, PostApiPatientsData, PostApiPatientsResponse } from '../types.gen';
+
+export const postApiAuthRegisterMutation = (options?: Partial<Options<PostApiAuthRegisterData>>): UseMutationOptions<unknown, AxiosError<PostApiAuthRegisterError>, Options<PostApiAuthRegisterData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<PostApiAuthRegisterError>, Options<PostApiAuthRegisterData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthRegister({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthLoginMutation = (options?: Partial<Options<PostApiAuthLoginData>>): UseMutationOptions<PostApiAuthLoginResponse, AxiosError<DefaultError>, Options<PostApiAuthLoginData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthLoginResponse, AxiosError<DefaultError>, Options<PostApiAuthLoginData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthLogin({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthRefreshMutation = (options?: Partial<Options<PostApiAuthRefreshData>>): UseMutationOptions<PostApiAuthRefreshResponse, AxiosError<DefaultError>, Options<PostApiAuthRefreshData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthRefreshResponse, AxiosError<DefaultError>, Options<PostApiAuthRefreshData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthRefresh({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -38,6 +80,106 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
         params.query = options.query;
     }
     return [params];
+};
+
+export const mapIdentityApiApiAuthConfirmEmailQueryKey = (options: Options<MapIdentityApiApiAuthConfirmEmailData>) => createQueryKey('mapIdentityApiApiAuthConfirmEmail', options);
+
+export const mapIdentityApiApiAuthConfirmEmailOptions = (options: Options<MapIdentityApiApiAuthConfirmEmailData>) => queryOptions<unknown, AxiosError<DefaultError>, unknown, ReturnType<typeof mapIdentityApiApiAuthConfirmEmailQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await mapIdentityApiApiAuthConfirmEmail({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: mapIdentityApiApiAuthConfirmEmailQueryKey(options)
+});
+
+export const postApiAuthResendConfirmationEmailMutation = (options?: Partial<Options<PostApiAuthResendConfirmationEmailData>>): UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiAuthResendConfirmationEmailData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PostApiAuthResendConfirmationEmailData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthResendConfirmationEmail({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthForgotPasswordMutation = (options?: Partial<Options<PostApiAuthForgotPasswordData>>): UseMutationOptions<unknown, AxiosError<PostApiAuthForgotPasswordError>, Options<PostApiAuthForgotPasswordData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<PostApiAuthForgotPasswordError>, Options<PostApiAuthForgotPasswordData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthForgotPassword({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthResetPasswordMutation = (options?: Partial<Options<PostApiAuthResetPasswordData>>): UseMutationOptions<unknown, AxiosError<PostApiAuthResetPasswordError>, Options<PostApiAuthResetPasswordData>> => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<PostApiAuthResetPasswordError>, Options<PostApiAuthResetPasswordData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthResetPassword({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAuthManage2FaMutation = (options?: Partial<Options<PostApiAuthManage2FaData>>): UseMutationOptions<PostApiAuthManage2FaResponse, AxiosError<PostApiAuthManage2FaError>, Options<PostApiAuthManage2FaData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthManage2FaResponse, AxiosError<PostApiAuthManage2FaError>, Options<PostApiAuthManage2FaData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthManage2Fa({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const getApiAuthManageInfoQueryKey = (options?: Options<GetApiAuthManageInfoData>) => createQueryKey('getApiAuthManageInfo', options);
+
+export const getApiAuthManageInfoOptions = (options?: Options<GetApiAuthManageInfoData>) => queryOptions<GetApiAuthManageInfoResponse, AxiosError<GetApiAuthManageInfoError>, GetApiAuthManageInfoResponse, ReturnType<typeof getApiAuthManageInfoQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await getApiAuthManageInfo({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: getApiAuthManageInfoQueryKey(options)
+});
+
+export const postApiAuthManageInfoMutation = (options?: Partial<Options<PostApiAuthManageInfoData>>): UseMutationOptions<PostApiAuthManageInfoResponse, AxiosError<PostApiAuthManageInfoError>, Options<PostApiAuthManageInfoData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAuthManageInfoResponse, AxiosError<PostApiAuthManageInfoError>, Options<PostApiAuthManageInfoData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAuthManageInfo({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };
 
 export const getApiPatientsProfileQueryKey = (options?: Options<GetApiPatientsProfileData>) => createQueryKey('getApiPatientsProfile', options);

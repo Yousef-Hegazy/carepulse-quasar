@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { useUserStore } from 'src/stores/user';
+import { useAuthStore } from 'src/stores/auth';
 
-const userStore = useUserStore();
-const { user } = storeToRefs(userStore);
-console.log({ ...user.value });
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
 </script>
 
 <template>
   <q-page>
-    <p>Hello {{ user?.firstName }}</p>
+    <p>Hello {{ user?.fullName }}</p>
   </q-page>
 </template>
 

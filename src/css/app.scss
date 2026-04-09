@@ -217,11 +217,11 @@ $black-900: dark(300);
   }
 }
 
-.app-btn {
+.q-btn {
   font-weight: 600;
 }
 
-.app-radio {
+.q-radio {
   font-weight: 600;
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -243,7 +243,7 @@ $black-900: dark(300);
   }
 }
 
-.app-input {
+.q-field {
   font-weight: 600;
 
   &.q-field--focused {
@@ -332,27 +332,7 @@ $black-900: dark(300);
 }
 
 .body--dark {
-  & .q-menu {
-    background-color: $grey-10 !important;
-
-    & .q-virtual-scroll__content {
-      & .q-item {
-        color: $grey-2;
-
-        &:hover,
-        &--active {
-          background-color: $grey-9 !important;
-        }
-
-        &.q-item--active {
-          background-color: $primary !important;
-          color: white;
-        }
-      }
-    }
-  }
-
-  & .app-checkbox:not(.disabled) {
+  & .q-checkbox:not(.disabled) {
 
     & .q-checkbox__label {
       transition: all 0.3s ease;
