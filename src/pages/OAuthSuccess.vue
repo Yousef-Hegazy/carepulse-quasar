@@ -16,6 +16,7 @@ const q = useQuasar();
 const { status, data, error } = useQuery({
   ...options,
   enabled: !!userType && userType === 'patient',
+  staleTime: 60 * 60 * 1000, // 1 hour
 });
 
 const authStore = useAuthStore();
@@ -40,7 +41,7 @@ watch(status, (newStatus) => {
     if (!data.value?.id) {
       router.replace('/patient-register');
     } else {
-      authStore.setUser(data.value);
+      authStore.setProfile(data.value);
       router.replace('/patient-dashboard');
     }
   }

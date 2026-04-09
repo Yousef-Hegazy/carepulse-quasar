@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
 import { useAuthStore } from 'src/stores/auth';
 
 const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
+const { profile } = storeToRefs(authStore);
 </script>
 
 <template>
   <q-page>
-    <p>Hello {{ user?.fullName }}</p>
+    <language-switcher />
+    <p>Hello {{ profile?.fullName }}</p>
   </q-page>
 </template>
 

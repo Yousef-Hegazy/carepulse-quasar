@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AuthForm from 'src/components/forms/AuthForm.vue';
 import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
+
 </script>
 
 <template>

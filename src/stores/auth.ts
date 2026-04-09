@@ -2,21 +2,21 @@ import { acceptHMRUpdate, defineStore } from 'pinia';
 import { getApiPatientsProfile, postApiAuthLogin, postApiAuthRefresh, postApiAuthRegister, type AccessTokenResponse, type LoginRequest, type PatientResponse, type RefreshRequest, type RegisterRequest } from 'src/api/generated';
 
 export interface AuthState {
-  user: PatientResponse | null;
+  profile: PatientResponse | null;
   auth: AccessTokenResponse | null;
 }
 
 export const useAuthStore = defineStore('authStore', {
   state: (): AuthState => ({
-    user: null,
+    profile: null,
     auth: null
   }),
   getters: {
     isAuthenticated: (state) => !!state.auth?.accessToken
   },
   actions: {
-    setUser(user: AuthState['user']) {
-      this.user = user;
+    setProfile(profile: AuthState['profile']) {
+      this.profile = profile;
     },
     setAuth(auth: AuthState['auth']) {
       this.auth = auth;
@@ -89,19 +89,19 @@ export const useAuthStore = defineStore('authStore', {
     },
     async getUserProfile() {
       if (!this.auth?.accessToken) {
-        this.user = null;
+        this.profile = null;
         return null;
       }
 
       try {
         const res = await getApiPatientsProfile();
-        this.user = res.data || null;
-        return this.user;
+        this.profile = res.data || null;
+        return this.profile;
 
       } catch (error) {
         console.log({ error });
 
-        this.user = null;
+        this.profile = null;
         throw error;
       }
     }

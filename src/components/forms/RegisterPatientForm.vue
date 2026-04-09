@@ -224,7 +224,7 @@ const onFinalSubmit = async () => {
           message: t('registerPatientForm.notifications.submitSuccess'),
         });
 
-        authStore.setUser(data);
+        authStore.setProfile(data);
 
         router.replace('/patient-dashboard');
       },
@@ -622,6 +622,3 @@ const onFinalSubmit = async () => {
 </template>
 
 <style scoped></style>
-
-
-
