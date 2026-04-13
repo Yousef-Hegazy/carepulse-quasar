@@ -8,11 +8,8 @@ const { t } = useI18n();
 
 <template>
   <q-page class="q-p-none row no-wrap full-width full-height">
-    <div class="absolute-top-left q-pa-sm">
-      <language-switcher />
-    </div>
-
     <section class="remove-scrollbar container q-mt-xl col-grow">
+      <language-switcher />
       <div class="sub-container full-width">
         <q-img
           src="assets/icons/logo-full.svg"

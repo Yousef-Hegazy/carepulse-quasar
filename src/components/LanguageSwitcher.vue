@@ -24,7 +24,7 @@ const setLanguage = (lang: string) => {
 </script>
 
 <template>
-  <q-btn :icon="`img:/assets/icons/${locale}.svg`">
+  <q-btn :icon="`img:/assets/icons/${locale}.svg`" round>
     <q-menu auto-close transition-show="fade" transition-hide="fade">
       <q-list style="min-width: 120px">
         <q-item clickable @click="setLanguage('en-US')">

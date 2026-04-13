@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+
 defineOptions({
   inheritAttrs: false,
 });
+const { locale } = useI18n();
 
 const props = withDefaults(defineProps<{ modelValue: string; mask?: string }>(), {
   mask: 'date',
@@ -19,14 +22,19 @@ defineEmits<{
     </template>
     <template #append>
       <slot name="append">
-        <q-icon name="event" class="cursor-pointer">
+        <q-icon name="eva-calendar-outline" class="cursor-pointer">
           <q-popup-proxy cover transition-show="scale" transition-hide="scale">
             <q-date
               :model-value="props.modelValue"
               @update:model-value="$emit('update:modelValue', $event)"
             >
               <div class="row items-center justify-end">
-                <q-btn v-close-popup label="Close" color="primary" flat />
+                <q-btn
+                  v-close-popup
+                  :label="locale === 'ar' ? 'اغلاق' : 'Close'"
+                  color="primary"
+                  flat
+                />
               </div>
             </q-date>
           </q-popup-proxy>

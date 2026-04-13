@@ -4,8 +4,8 @@ import { type DefaultError, queryOptions, type UseMutationOptions } from '@tanst
 import type { AxiosError } from 'axios';
 
 import { client } from '../client.gen';
-import { getApiAuthManageInfo, getApiPatientsProfile, mapIdentityApiApiAuthConfirmEmail, type Options, postApiAuthForgotPassword, postApiAuthLogin, postApiAuthManage2Fa, postApiAuthManageInfo, postApiAuthRefresh, postApiAuthRegister, postApiAuthResendConfirmationEmail, postApiAuthResetPassword, postApiPatients } from '../sdk.gen';
-import type { GetApiAuthManageInfoData, GetApiAuthManageInfoError, GetApiAuthManageInfoResponse, GetApiPatientsProfileData, GetApiPatientsProfileResponse, MapIdentityApiApiAuthConfirmEmailData, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordError, PostApiAuthLoginData, PostApiAuthLoginResponse, PostApiAuthManage2FaData, PostApiAuthManage2FaError, PostApiAuthManage2FaResponse, PostApiAuthManageInfoData, PostApiAuthManageInfoError, PostApiAuthManageInfoResponse, PostApiAuthRefreshData, PostApiAuthRefreshResponse, PostApiAuthRegisterData, PostApiAuthRegisterError, PostApiAuthResendConfirmationEmailData, PostApiAuthResetPasswordData, PostApiAuthResetPasswordError, PostApiPatientsData, PostApiPatientsResponse } from '../types.gen';
+import { getApiAuthManageInfo, getApiPatientsProfile, mapIdentityApiApiAuthConfirmEmail, type Options, postApiAppointments, postApiAuthForgotPassword, postApiAuthLogin, postApiAuthManage2Fa, postApiAuthManageInfo, postApiAuthRefresh, postApiAuthRegister, postApiAuthResendConfirmationEmail, postApiAuthResetPassword, postApiPatients } from '../sdk.gen';
+import type { GetApiAuthManageInfoData, GetApiAuthManageInfoError, GetApiAuthManageInfoResponse, GetApiPatientsProfileData, GetApiPatientsProfileResponse, MapIdentityApiApiAuthConfirmEmailData, PostApiAppointmentsData, PostApiAppointmentsResponse, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordError, PostApiAuthLoginData, PostApiAuthLoginResponse, PostApiAuthManage2FaData, PostApiAuthManage2FaError, PostApiAuthManage2FaResponse, PostApiAuthManageInfoData, PostApiAuthManageInfoError, PostApiAuthManageInfoResponse, PostApiAuthRefreshData, PostApiAuthRefreshResponse, PostApiAuthRegisterData, PostApiAuthRegisterError, PostApiAuthResendConfirmationEmailData, PostApiAuthResetPasswordData, PostApiAuthResetPasswordError, PostApiPatientsData, PostApiPatientsResponse } from '../types.gen';
 
 export const postApiAuthRegisterMutation = (options?: Partial<Options<PostApiAuthRegisterData>>): UseMutationOptions<unknown, AxiosError<PostApiAuthRegisterError>, Options<PostApiAuthRegisterData>> => {
     const mutationOptions: UseMutationOptions<unknown, AxiosError<PostApiAuthRegisterError>, Options<PostApiAuthRegisterData>> = {
@@ -201,6 +201,20 @@ export const postApiPatientsMutation = (options?: Partial<Options<PostApiPatient
     const mutationOptions: UseMutationOptions<PostApiPatientsResponse, AxiosError<DefaultError>, Options<PostApiPatientsData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await postApiPatients({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postApiAppointmentsMutation = (options?: Partial<Options<PostApiAppointmentsData>>): UseMutationOptions<PostApiAppointmentsResponse, AxiosError<DefaultError>, Options<PostApiAppointmentsData>> => {
+    const mutationOptions: UseMutationOptions<PostApiAppointmentsResponse, AxiosError<DefaultError>, Options<PostApiAppointmentsData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await postApiAppointments({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

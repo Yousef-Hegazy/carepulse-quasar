@@ -6,6 +6,7 @@ import { postApiPatientsMutation } from 'src/api/generated/@tanstack/vue-query.g
 import { useAutocompleteSearch } from 'src/composables/useAutocompleteSearch';
 import { Doctors } from 'src/lib/doctors';
 import { IdentificationTypes } from 'src/lib/identification-types';
+import { parseStringToDate } from 'src/lib/utils';
 import { useAuthStore } from 'src/stores/auth';
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -73,11 +74,6 @@ const formValues = reactive<{
   scannedIdentification: null,
   privacyConsent: false,
 });
-
-const parseDate = (date: string) => {
-  const [y, m, d] = date.split('/');
-  return new Date(Number(y), Number(m) - 1, Number(d));
-};
 
 const submitMutation = useMutation(postApiPatientsMutation());
 const authStore = useAuthStore();
@@ -174,8 +170,9 @@ const onFinalSubmit = async () => {
   formData.append('Address', formValues.address);
   formData.append('Allergies', formValues.allergies);
 
-  if (formValues.birthDate) {
-    formData.append('BirthDate', parseDate(formValues.birthDate).toISOString());
+  const birthDate = parseStringToDate(formValues.birthDate)?.toISOString();
+  if (birthDate) {
+    formData.append('BirthDate', birthDate);
   }
 
   formData.append('CurrentMedication', formValues.currentMedication);
@@ -204,7 +201,7 @@ const onFinalSubmit = async () => {
   formData.append('PastMedicalHistory', formValues.pastMedicalHistory);
 
   if (formValues.primaryCarePhysician?.value) {
-    formData.append('PrimaryPhysicianName', formValues.primaryCarePhysician.value);
+    formData.append('PrimaryPhysicianName', String(formValues.primaryCarePhysician));
   }
 
   formData.append('PrivacyConsent', String(formValues.privacyConsent));
@@ -226,7 +223,7 @@ const onFinalSubmit = async () => {
 
         authStore.setProfile(data);
 
-        router.replace('/patient-dashboard');
+        router.replace('/new-appointment');
       },
       onError: (error) => {
         q.notify({

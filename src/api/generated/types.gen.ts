@@ -11,6 +11,27 @@ export type AccessTokenResponse = {
     refreshToken: string;
 };
 
+export type AppointmentResponse = {
+    id?: number | string;
+    patientId?: number | string;
+    patientName?: string;
+    schedule?: string;
+    status?: Status;
+    primaryPhysician?: string;
+    reason?: string;
+    notes?: string;
+    cancellationReason?: null | string;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
+export type CreateAppointmentRequest = {
+    schedule?: string;
+    primaryPhysician?: string;
+    reason?: string;
+    notes?: string;
+};
+
 export type ForgotPasswordRequest = {
     email: string;
 };
@@ -51,7 +72,7 @@ export type LoginRequest = {
 export type PatientResponse = {
     userId?: number | string;
     id?: number | string;
-    fullName?: null | string;
+    name?: null | string;
     phoneNumber?: null | string;
     username?: null | string;
     privacyConsent?: boolean;
@@ -91,6 +112,8 @@ export type ResetPasswordRequest = {
     resetCode: string;
     newPassword: string;
 };
+
+export type Status = number;
 
 export type TwoFactorRequest = {
     enable?: null | boolean;
@@ -382,3 +405,19 @@ export type PostApiPatientsResponses = {
 };
 
 export type PostApiPatientsResponse = PostApiPatientsResponses[keyof PostApiPatientsResponses];
+
+export type PostApiAppointmentsData = {
+    body: CreateAppointmentRequest;
+    path?: never;
+    query?: never;
+    url: '/api/Appointments';
+};
+
+export type PostApiAppointmentsResponses = {
+    /**
+     * OK
+     */
+    200: AppointmentResponse;
+};
+
+export type PostApiAppointmentsResponse = PostApiAppointmentsResponses[keyof PostApiAppointmentsResponses];

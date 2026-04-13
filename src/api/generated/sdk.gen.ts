@@ -2,7 +2,7 @@
 
 import { type Client, type Options as Options2, type TDataShape, urlSearchParamsBodySerializer } from './client';
 import { client } from './client.gen';
-import type { GetApiAuthManageInfoData, GetApiAuthManageInfoErrors, GetApiAuthManageInfoResponses, GetApiPatientsProfileData, GetApiPatientsProfileResponses, MapIdentityApiApiAuthConfirmEmailData, MapIdentityApiApiAuthConfirmEmailResponses, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordErrors, PostApiAuthForgotPasswordResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthManage2FaData, PostApiAuthManage2FaErrors, PostApiAuthManage2FaResponses, PostApiAuthManageInfoData, PostApiAuthManageInfoErrors, PostApiAuthManageInfoResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses, PostApiAuthRegisterData, PostApiAuthRegisterErrors, PostApiAuthRegisterResponses, PostApiAuthResendConfirmationEmailData, PostApiAuthResendConfirmationEmailResponses, PostApiAuthResetPasswordData, PostApiAuthResetPasswordErrors, PostApiAuthResetPasswordResponses, PostApiPatientsData, PostApiPatientsResponses } from './types.gen';
+import type { GetApiAuthManageInfoData, GetApiAuthManageInfoErrors, GetApiAuthManageInfoResponses, GetApiPatientsProfileData, GetApiPatientsProfileResponses, MapIdentityApiApiAuthConfirmEmailData, MapIdentityApiApiAuthConfirmEmailResponses, PostApiAppointmentsData, PostApiAppointmentsResponses, PostApiAuthForgotPasswordData, PostApiAuthForgotPasswordErrors, PostApiAuthForgotPasswordResponses, PostApiAuthLoginData, PostApiAuthLoginResponses, PostApiAuthManage2FaData, PostApiAuthManage2FaErrors, PostApiAuthManage2FaResponses, PostApiAuthManageInfoData, PostApiAuthManageInfoErrors, PostApiAuthManageInfoResponses, PostApiAuthRefreshData, PostApiAuthRefreshResponses, PostApiAuthRegisterData, PostApiAuthRegisterErrors, PostApiAuthRegisterResponses, PostApiAuthResendConfirmationEmailData, PostApiAuthResendConfirmationEmailResponses, PostApiAuthResetPasswordData, PostApiAuthResetPasswordErrors, PostApiAuthResetPasswordResponses, PostApiPatientsData, PostApiPatientsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -115,6 +115,16 @@ export const postApiPatients = <ThrowOnError extends boolean = false>(options: O
     ...options,
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        ...options.headers
+    }
+});
+
+export const postApiAppointments = <ThrowOnError extends boolean = false>(options: Options<PostApiAppointmentsData, ThrowOnError>) => (options.client ?? client).post<PostApiAppointmentsResponses, unknown, ThrowOnError>({
+    responseType: 'json',
+    url: '/api/Appointments',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
         ...options.headers
     }
 });

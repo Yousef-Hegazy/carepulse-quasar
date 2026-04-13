@@ -1,16 +1,13 @@
 <script setup lang="ts">
 import AuthForm from 'src/components/forms/AuthForm.vue';
 import LanguageSwitcher from 'src/components/LanguageSwitcher.vue';
-
 </script>
 
 <template>
   <q-page class="q-p-none row no-wrap full-width full-height">
-    <div class="absolute-top-left q-pa-sm q-pt-lg">
-      <language-switcher />
-    </div>
-
     <section class="remove-scrollbar container q-my-auto col-grow">
+      <language-switcher />
+      
       <div class="sub-container max-w-xxs">
         <q-img
           src="assets/icons/logo-full.svg"

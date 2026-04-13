@@ -117,5 +117,30 @@ export default {
     redirectMessage: 'Please wait while we redirect you...',
     errorMessage: 'Failed to check user profile. Please try again.',
   },
+  newAppointmentForm: {
+    title: 'New Appointment',
+    subtitle: 'Schedule your appointment, now!',
+    fields: {
+      scheduleDate: 'Schedule Date',
+      scheduleTime: 'Schedule Time',
+      primaryPhysician: 'Primary Physician',
+      reason: 'Reason',
+      notes: 'Notes',
+    },
+    actions: {
+      submit: 'Submit',
+    },
+    validation: {
+      scheduleDateRequired: 'Please select a schedule date',
+      scheduleTimeRequired: 'Please select a schedule time',
+      primaryPhysicianRequired: 'Please select a primary physician',
+      reasonRequired: 'Please enter the reason for your appointment',
+    },
+    notifications: {
+      invalidForm: 'Please make sure all fields are filled correctly.',
+      submitSuccess: 'Your appointment has been scheduled successfully!',
+      submitError: 'An error occurred while scheduling your appointment. Please try again.',
+    },
+  },
 };
 

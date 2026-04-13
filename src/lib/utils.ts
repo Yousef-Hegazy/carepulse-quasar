@@ -68,3 +68,24 @@ export function encryptKey(passkey: string) {
 export function decryptKey(passkey: string) {
   return atob(passkey);
 }
+
+export const parseStringToDate = (date?: string, separator?: string | RegExp) => {
+  if (!date) return null;
+
+  // Use provided separator or detect common separators
+  const sep = separator || /[/\-.]/;
+
+  const parts = date.split(sep);
+  if (parts.length !== 3) return null;
+
+  const [y, m, d] = parts;
+  const year = Number(y);
+  const month = Number(m) - 1;
+  const day = Number(d);
+
+  // Validate the parsed values
+  if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+
+  // Create date at UTC midnight to avoid timezone shift
+  return new Date(Date.UTC(year, month, day));
+};

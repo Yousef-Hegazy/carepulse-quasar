@@ -42,7 +42,7 @@ watch(status, (newStatus) => {
       router.replace('/patient-register');
     } else {
       authStore.setProfile(data.value);
-      router.replace('/patient-dashboard');
+      router.replace('/new-appointment');
     }
   }
 });

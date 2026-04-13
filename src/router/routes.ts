@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: (_, __, next) => {
           const { profile, isAuthenticated } = storeToRefs(useAuthStore());
           if (profile.value?.id) {
-            next('/patient-dashboard');
+            next('/new-appointment');
             return;
           } else if (isAuthenticated.value) {
             next('/oauth-success?type=patient');
@@ -34,15 +34,19 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: (_, __, next) => {
           const { profile } = storeToRefs(useAuthStore());
           if (profile.value?.id) {
-            next('/patient-dashboard');
+            next('/new-appointment');
           } else {
             next();
           }
         }
       },
       {
-        path: 'patient-dashboard',
-        component: () => import('pages/PatientDashboard.vue'),
+        path: 'new-appointment',
+        component: () => import('pages/NewAppointment.vue'),
+      },
+      {
+        path: 'appointment-success',
+        component: () => import('pages/AppointmentSuccess.vue'),
       }
     ],
   },
