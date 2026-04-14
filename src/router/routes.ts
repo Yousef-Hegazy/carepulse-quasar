@@ -43,6 +43,14 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'new-appointment',
         component: () => import('pages/NewAppointment.vue'),
+        beforeEnter: (_, __, next) => {
+          const { profile } = storeToRefs(useAuthStore());
+          if (!profile.value || !profile.value.id) {
+            next('/');
+          } else {
+            next();
+          }
+        }
       },
       {
         path: 'appointment-success',

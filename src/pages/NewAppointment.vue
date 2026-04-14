@@ -10,10 +10,11 @@ import { Doctors } from 'src/lib/doctors';
 import { parseStringToDate } from 'src/lib/utils';
 import { reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
 const { t, locale } = useI18n();
 const q = useQuasar();
-
+const router = useRouter();
 const { filteredOptions: doctorOptions, filterFn: doctorFilterFn } = useAutocompleteSearch(() =>
   Doctors.map((doctor) => ({
     label: locale.value === 'ar' ? doctor.nameAr : doctor.nameEn,
@@ -65,30 +66,27 @@ const onSubmit = async () => {
     notes: formValues.notes,
   };
 
-
   submitMutation.mutate(
     {
       body,
     },
     {
-      onSuccess: () => {
+      onSuccess: (res) => {
         q.notify({
           type: 'positive',
           message: t('newAppointmentForm.notifications.submitSuccess'),
         });
 
-        // Reset form
-        formValues.scheduleDate = '';
-        formValues.scheduleTime = '';
-        formValues.primaryPhysician = null;
-        formValues.reason = '';
-        formValues.notes = '';
+        router.push({
+          path: '/appointment-success',
+          query: res,
+        });
       },
       onError: (error) => {
         q.notify({
           type: 'negative',
-          message: t('newAppointmentForm.notifications.submitError'),
-          caption: error.message || '',
+          message: (error.response?.data as any)?.detail || '',
+          caption: t('newAppointmentForm.notifications.submitError'),
         });
       },
     },
@@ -111,11 +109,12 @@ const onSubmit = async () => {
         />
 
         <p class="text-h4 q-mb-xs">{{ t('newAppointmentForm.title') }}</p>
-        <p class="text-subtitle2 text-grey-5">{{ t('newAppointmentForm.subtitle') }}</p>
+        <p class="text-subtitle2 text-grey-5 q-mb-lg">{{ t('newAppointmentForm.subtitle') }}</p>
 
         <q-form ref="formRef" @submit.prevent="onSubmit">
           <div class="row q-col-gutter-sm">
             <app-date-picker
+              future-only
               v-model="formValues.scheduleDate"
               :label="t('newAppointmentForm.fields.scheduleDate')"
               class="col-12 col-md-6"

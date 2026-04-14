@@ -178,8 +178,9 @@ $black-900: dark(300);
   border-radius: 1rem;
   background-color: dark(200);
   padding: 1.25rem 5%;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-  0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
 
   @media (min-width: $bp-xl) {
     padding-left: 3rem;
@@ -268,6 +269,19 @@ $black-900: dark(300);
   }
 }
 
+.popup-input.q-field {
+    cursor: pointer;
+    input {
+      cursor: pointer !important;
+    }
+}
+
+.q-field.q-field--readonly {
+  .q-field__control::before {
+    border-style: solid;
+  }
+}
+
 .q-stepper {
   box-shadow: none;
 
@@ -333,7 +347,6 @@ $black-900: dark(300);
 
 .body--dark {
   & .q-checkbox:not(.disabled) {
-
     & .q-checkbox__label {
       transition: all 0.3s ease;
     }
@@ -353,4 +366,14 @@ $black-900: dark(300);
       }
     }
   }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-bottom: 0;
 }

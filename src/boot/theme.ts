@@ -36,7 +36,7 @@ export default defineBoot(() => {
   setDefaults(QBtn, {
     unelevated: true,
     noCaps: true,
-    ripple: true,
+    ripple: false,
     size: 'md',
     dense: false,
     type: 'button',
